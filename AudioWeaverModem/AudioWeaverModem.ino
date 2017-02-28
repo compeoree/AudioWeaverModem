@@ -20,15 +20,17 @@
 
 //------------------------------------------------------
 AudioInputI2S     AudioInput;
-AudioMixer4       Gain;
+AudioMixer4       InGain;
 AudioWeaverModem  Demodulator;         
 AudioWeaverModem  Modulator;         
+AudioMixer4       OutGain;
 AudioOutputI2S    Output;
 //-------------------------------------------------------
-AudioConnection c1(AudioInput,0,  Gain,0);
-AudioConnection c2(Gain,0,        Modulator,0);
+AudioConnection c1(AudioInput,0,  InGain,0);
+AudioConnection c2(InGain,0,      Modulator,0);
 AudioConnection c3(Modulator,0,   Demodulator,0);
-AudioConnection c4(Demodulator,0, Output,0);
+AudioConnection c4(Demodulator,0, OutGain,0);
+AudioConnection c5(OutGain,0,     Output,0);
 AudioControlSGTL5000 audioShield;
 
 //-------------------------------------------------------
@@ -51,7 +53,8 @@ void setup() {
   audioShield.enable();
   AudioMemory(20);
   audioShield.volume(0.7);
-  Gain.gain(0., 2.0);                             // Input gain (adjust to suit audio source)
+  InGain.gain(0., 2.0);                           // Input gain (adjust to suit audio source)
+  OutGain.gain(0., 5.0);                         // Input gain (adjust to suit audio source)
   Modulator.Oscillator1_freq(LPF_cutoff);         // Weaver modulator oscillator frequencies
   Modulator.Oscillator2_freq(TuningFrequency);
   Demodulator.Oscillator1_freq(TuningFrequency);  // Weaver demodulator oscillator frequencies
